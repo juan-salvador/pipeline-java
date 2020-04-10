@@ -3,18 +3,28 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Building..'
+                sh 'make build'
             }
         }
         stage('Test') {
             steps {
-                echo 'Testing..'
+                sh 'mvn test'
             }
         }
         stage('Deploy') {
             steps {
-                echo 'Deploying....'
+                sh 'make deploy'
             }
+        }
+        stage('Functional Test'){
+            steps {
+                sh 'make run-postman'
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
         }
     }
 }
