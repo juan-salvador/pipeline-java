@@ -10,6 +10,6 @@ WORKDIR /app
 
 RUN mvn package
 
-EXPOSE 8080
+EXPOSE 8081
 
 ENTRYPOINT [ "java", "-jar", "target/pipeline-java-0.0.1-SNAPSHOT.jar" ]

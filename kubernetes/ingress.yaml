@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+    name: ingress
+    annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+    tls:
+      - hosts:
+         - concept-lab.xyz
+        secretName: concept-ssl
+    rules:
+    - host: concept-lab.xyz 
+      http:
+        paths:
+        - path: /health
+          backend:
+            serviceName: pipeline-java-svc
+            servicePort: 80

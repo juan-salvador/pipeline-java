@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pipeline-java
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+        app: pipeline-java
+  template:
+    metadata:
+      labels:
+        app: pipeline-java
+    spec:
+      volumes:
+      - name: service-account-creds
+        secret:
+         secretName: service-account-creds
+      containers:
+      - name: esp
+        image: gcr.io/endpoints-release/endpoints-runtime:1
+        imagePullPolicy: Always
+        args: [
+         "--http_port", "8080",
+         #"--ssl_port", "443",
+         "--backend", "127.0.0.1:8081",
+         "--service", "hello-world-java.endpoints.shaped-totem-274202.cloud.goog",
+         "--rollout_strategy", "managed",
+         "--service_account_key", "/etc/nginx/creds/service-account-creds.json"
+        ]
+        ports:
+         - containerPort: 8080
+        volumeMounts:
+         - mountPath: /etc/nginx/creds
+           name: service-account-creds
+           readOnly: true
+      - name: pipeline
+        image: gcr.io/shaped-totem-274202/pipeline-java:v1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8081

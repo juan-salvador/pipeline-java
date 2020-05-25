@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name:  pipeline-java-svc
+spec:
+  type: NodePort
+  selector:
+    app:  pipeline-java
+  ports:
+  - protocol: TCP
+    port:  80
+    targetPort:  8080
